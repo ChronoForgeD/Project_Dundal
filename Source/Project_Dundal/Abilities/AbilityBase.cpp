@@ -8,3 +8,11 @@ UAbilityBase::UAbilityBase()
 {
 	// Set this ability to be initialized when the game starts
 }
+
+void UAbilityBase::ExecuteAbility_Implementation(AActor* Instigator, AActor* Target)
+{
+	// This is where the logic for executing the ability would go.
+	// For example, you could apply damage to the target, play an animation, etc.
+	UE_LOG(LogTemp, Warning, TEXT("Executing ability: %s"), *AbilityData.AbilityName.ToString());
+	OnAbilityExecuted.Broadcast();
+}

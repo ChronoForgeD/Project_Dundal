@@ -19,11 +19,11 @@ struct FAbilityData
 	UPROPERTY(BlueprintReadWrite)
 	FText AbilityName;
 	UPROPERTY(BlueprintReadWrite)
-	float Damage;
+	float Damage = 10.0f;
 	UPROPERTY(BlueprintReadWrite)
-	float Cooldown;
+	float Cooldown = 1.0f;
 	UPROPERTY(BlueprintReadWrite)
-	float StartupTime;
+	float StartupTime = 0.1f;
 	UPROPERTY(BlueprintReadWrite)
 	EAbilitySlot Slot = EAbilitySlot::Engage;
 	UPROPERTY(BlueprintReadWrite)
@@ -40,6 +40,9 @@ class PROJECT_DUNDAL_API UAbilityBase : public UObject
 	GENERATED_BODY()
 	
 	public:
+	
+	UAbilityBase();
+	
 	// Struct data variable
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability")
 	FAbilityData AbilityData;
