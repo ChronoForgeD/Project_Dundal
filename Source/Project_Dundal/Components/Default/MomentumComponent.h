@@ -12,19 +12,16 @@ USTRUCT(BlueprintType)
 struct FMomentumData
 {
 	GENERATED_BODY()
-	UPROPERTY(BlueprintReadWrite)
-	float CurrentMomentum = 0.0f;
-	UPROPERTY(BlueprintReadWrite)
+	
+	UPROPERTY(EditDefaultsOnly)
 	float MaxMomentum = 100.0f;
-	UPROPERTY(BlueprintReadWrite)
-	bool bIsInFlow;
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly)
 	float FlowDamageMultiplier = 1.0f;
-	UPROPERTY(BlueprintReadWrite)
-	EAbilitySlot LastSlot;
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnterFlow);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnExitFlow);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_DUNDAL_API UMomentumComponent : public UActorComponent
@@ -38,25 +35,45 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability")
 	FMomentumData MomentumData;
 	
-	// Delegate for entering flow state when maximum momentum is gained
+	UPROPERTY(BlueprintReadOnly)
+	float CurrentMomentum = 0.0f;
+	
+	UPROPERTY(BlueprintReadOnly)
+	EAbilitySlot LastSlot = EAbilitySlot::Engage;
+	
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsInFlow = false;
+	
+	// Delegate for entering state when maximum momentum is gained and exiting flow when meter is depleted
 	UPROPERTY(BlueprintAssignable)
 	FOnEnterFlow OnEnterFlow;
 	
-	UFUNCTION(BlueprintCallable)
-	void AddMomentum();
+	UPROPERTY(BlueprintAssignable)
+	FOnExitFlow OnExitFlow;
 	
 	UFUNCTION(BlueprintCallable)
-	void RemoveMomentum();
+	void AddMomentum(float Amount, EAbilitySlot Slot);
 	
-	// Check if momentum is at max, if so activate flow and unlock ultimate for use.
 	UFUNCTION(BlueprintCallable)
-	void CheckFlow();
+	void RemoveMomentum(float Amount);
 	
 	// Getters for UI to read Current Momentum and Max Momentum
+	UFUNCTION(BlueprintPure)
+	float GetMomentumPercentage() const;
+	
+	// Exit flow when ultimate is used
 	UFUNCTION(BlueprintCallable)
-	void GetCurrentMomentum();
+	void ExitFlow();
+	
+	// Check if ultimate is ready
+	UFUNCTION(BlueprintPure)
+	bool IsUltimateReady() const;
 	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	
+	// Check if momentum is at max, if so activate flow and unlock ultimate for use.
+	UFUNCTION()
+	void CheckFlow();
 };

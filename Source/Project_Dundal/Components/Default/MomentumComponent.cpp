@@ -21,22 +21,46 @@ void UMomentumComponent::BeginPlay()
 	// ...
 }
 
-void UMomentumComponent::AddMomentum()
+void UMomentumComponent::AddMomentum(float Amount, EAbilitySlot Slot)
 {
-	// Add logic later
+	CurrentMomentum = FMath::Clamp(CurrentMomentum + Amount, 0.0f, MomentumData.MaxMomentum);
+	LastSlot = Slot;
+	CheckFlow();
 }
 
-void UMomentumComponent::RemoveMomentum()
+void UMomentumComponent::RemoveMomentum(float Amount)
 {
-	// Add logic later
+	CurrentMomentum = FMath::Clamp(CurrentMomentum - Amount, 0.0f, MomentumData.MaxMomentum);
+	CheckFlow();
 }
 
 void UMomentumComponent::CheckFlow()
 {
-	// Add logic later
+	if (!bIsInFlow && CurrentMomentum >= MomentumData.MaxMomentum)
+	{
+		bIsInFlow = true;
+		OnEnterFlow.Broadcast();
+	}
+	else if (bIsInFlow && CurrentMomentum <= 0.0f)
+	{
+		bIsInFlow = false;
+		OnExitFlow.Broadcast();
+	}
 }
 
-void UMomentumComponent::GetCurrentMomentum()
+float UMomentumComponent::GetMomentumPercentage() const
 {
-	// Add logic later
+	if (MomentumData.MaxMomentum <= 0) return 0.0f;
+	return CurrentMomentum / MomentumData.MaxMomentum;
+}
+
+void UMomentumComponent::ExitFlow()
+{
+	CurrentMomentum = 0.0f;
+	CheckFlow();
+}
+
+bool UMomentumComponent::IsUltimateReady() const
+{
+	return bIsInFlow;
 }

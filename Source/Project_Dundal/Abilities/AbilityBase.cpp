@@ -14,5 +14,34 @@ void UAbilityBase::ExecuteAbility_Implementation(AActor* Instigator, AActor* Tar
 	// This is where the logic for executing the ability would go.
 	// For example, you could apply damage to the target, play an animation, etc.
 	UE_LOG(LogTemp, Warning, TEXT("Executing ability: %s"), *AbilityData.AbilityName.ToString());
+	
+}
+
+bool UAbilityBase::TryExecuteAbility(AActor* Instigator, AActor* Target)
+{
+	if (CanExecuteAbility()) return false;
+	ExecuteAbility(Instigator, Target);
+	StartCooldown();
 	OnAbilityExecuted.Broadcast();
+	return true;
+}
+
+void UAbilityBase::StartCooldown()
+{
+	if (AbilityData.Cooldown > 0.0f)
+	{
+		bIsOnCooldown = true;
+		CurrentCooldown = AbilityData.Cooldown;
+	}
+}
+
+bool UAbilityBase::CanExecuteAbility() const
+{
+	return !bIsOnCooldown;
+}
+
+void UAbilityBase::ResetCooldown()
+{
+	bIsOnCooldown = false;
+	CurrentCooldown = 0.0f;
 }
