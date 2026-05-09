@@ -6,9 +6,9 @@
 UENUM(BlueprintType)
 enum class EAbilitySlot : uint8
 {
-	Engage      UMETA(DisplayName = "E - Engage"),
-	Follow      UMETA(DisplayName = "Q - Follow-up"),
-	Counter     UMETA(DisplayName = "W - Counter"),
-	Interrupt   UMETA(DisplayName = "Interrupt"),
-	Ultimate    UMETA(DisplayName = "Ultimate"),
+	Engage      UMETA(DisplayName = "Q - Engage"),
+	Follow      UMETA(DisplayName = "W - Follow-up"),
+	Counter     UMETA(DisplayName = "E - Counter"),
+	Interrupt   UMETA(DisplayName = "R - Ultimate"),
+	Ultimate    UMETA(DisplayName = "T - Interrupt"),
 };
