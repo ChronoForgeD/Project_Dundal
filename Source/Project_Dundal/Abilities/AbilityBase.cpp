@@ -1,3 +1,4 @@
+
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
@@ -19,7 +20,11 @@ void UAbilityBase::ExecuteAbility_Implementation(AActor* Instigator, AActor* Tar
 
 bool UAbilityBase::TryExecuteAbility(AActor* Instigator, AActor* Target)
 {
-	if (CanExecuteAbility()) return false;
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, 
+		FString::Printf(TEXT("TryExecute called. CanExecute: %s"), 
+		CanExecuteAbility() ? TEXT("true") : TEXT("false")));
+	
+	if (!CanExecuteAbility()) return false;
 	ExecuteAbility(Instigator, Target);
 	StartCooldown();
 	OnAbilityExecuted.Broadcast();

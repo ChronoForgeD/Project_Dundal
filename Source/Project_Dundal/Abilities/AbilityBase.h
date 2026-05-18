@@ -15,17 +15,17 @@ USTRUCT(BlueprintType)
 struct FAbilityData
 {
 	GENERATED_BODY()
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	FText AbilityName;
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	float Damage = 10.0f;
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	float Cooldown = 1.0f;
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	float StartupTime = 0.1f;
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	EAbilitySlot Slot = EAbilitySlot::Engage;
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	UAnimMontage* AnimationMontage = nullptr;
 };
 
@@ -41,7 +41,7 @@ class PROJECT_DUNDAL_API UAbilityBase : public UObject
 	UAbilityBase();
 	
 	// Struct data variable
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	FAbilityData AbilityData;
 	
 	// Runtime State
