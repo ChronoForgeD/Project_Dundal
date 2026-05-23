@@ -1,16 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Components/Default/AutoAttackComponent.h"
+#include "AutoAttackComponent.h"
+#include "Project_Dundal/FighterCharacterBase.h"
 
 // Sets default values for this component's properties
 UAutoAttackComponent::UAutoAttackComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
 
@@ -23,12 +20,40 @@ void UAutoAttackComponent::BeginPlay()
 	
 }
 
-
-// Called every frame
-void UAutoAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+// Start Auto Attack Loop 
+void UAutoAttackComponent::StartAutoAttackLoop_Implementation()
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, 
+		FString::Printf(TEXT("%s starting auto attack loop"), *GetName()));
+	
+	GetWorld()->GetTimerManager().SetTimer(AutoAttackTimer, this, &UAutoAttackComponent::AutoAttack_Implementation, AutoAttackInterval, true);
 }
 
+// Auto Attack Function Implementation
+void UAutoAttackComponent::AutoAttack_Implementation()
+{
+	if (!EnemyFighter || !IsValid(EnemyFighter))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, 
+			FString::Printf(TEXT("%s has no EnemyFighter!"), *GetName()));
+		StopAutoAttackLoop();
+		return;
+	}
+    
+	if (EnemyFighter->HealthComponent->IsDead())
+	{
+		StopAutoAttackLoop();
+		return;
+	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, 
+		FString::Printf(TEXT("%s attacks for %f damage"), *GetName(), AutoAttackDamage));
+    
+	EnemyFighter->HealthComponent->TakeDamage(AutoAttackDamage);
+}
+
+// Stop Auto Attack Loop
+void UAutoAttackComponent::StopAutoAttackLoop_Implementation()
+{
+	GetWorld()->GetTimerManager().ClearTimer(AutoAttackTimer);
+}
